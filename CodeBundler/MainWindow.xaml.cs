@@ -66,7 +66,7 @@ public partial class MainWindow : Window
         var fileDialog = new Microsoft.Win32.OpenFileDialog
         {
             Title = "Select Source Project",
-            Filter = "Project Files (*.csproj)|*.csproj",
+            Filter = "Project Files (*.csproj, *.vbproj)|*.csproj;*.vbproj",
             Multiselect = false
         };
 
@@ -99,9 +99,9 @@ public partial class MainWindow : Window
     {
         var fileDialog = new Microsoft.Win32.OpenFileDialog
         {
-            Title = "Select Source File",
-            Filter = "C# Files (*.cs)|*.cs",
-            Multiselect = false
+            Title = "Select Source Code File(s)",
+            Filter = "Source Code Files (*.cs, *.vb)|*.cs;*.vb|All Files (*.*)|*.*",
+            Multiselect = true
         };
 
         if (fileDialog.ShowDialog() != true)
