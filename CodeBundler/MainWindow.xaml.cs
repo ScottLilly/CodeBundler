@@ -1,5 +1,7 @@
-﻿using CodeBundler.Windows;
-using System.Reflection.Metadata;
+﻿using CodeBundler.Engine.Models;
+using CodeBundler.Engine.Services;
+using CodeBundler.Windows;
+using Microsoft.Win32;
 using System.Windows;
 
 namespace CodeBundler;
@@ -42,7 +44,7 @@ public partial class MainWindow : Window
 
     private async void SelectSourceSolution_Click(object sender, RoutedEventArgs e)
     {
-        var fileDialog = new Microsoft.Win32.OpenFileDialog
+        var fileDialog = new OpenFileDialog
         {
             Title = "Select Source Solution",
             Filter = "Solution Files (*.sln)|*.sln",
@@ -54,16 +56,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        //var solution = await FileParser.ParseSolutionFileAsync(fileDialog.FileName);
-
-        //var analysisJob = new AnalysisJob(solution);
-
-        //List<Document> uniqueClassFileNames = await analysisJob.GetClassFiles();
+        var fileContents = await FileAggregator.GetContentsForSolutionAsync(fileDialog.FileName);
     }
 
     private async void SelectSourceProject_Click(object sender, RoutedEventArgs e)
     {
-        var fileDialog = new Microsoft.Win32.OpenFileDialog
+        var fileDialog = new OpenFileDialog
         {
             Title = "Select Source Project",
             Filter = "Project Files (*.csproj, *.vbproj)|*.csproj;*.vbproj",
@@ -75,29 +73,28 @@ public partial class MainWindow : Window
             return;
         }
 
-        //var project = await FileParser.ParseProjectFileAsync(fileDialog.FileName);
+        var fileContents = await FileAggregator.GetContentsForProjectAsync(fileDialog.FileName);
     }
 
-    private void SelectSourceFolder_Click(object sender, RoutedEventArgs e)
+    private async void SelectSourceFolder_Click(object sender, RoutedEventArgs e)
     {
-        var folderDialog = new Microsoft.Win32.OpenFileDialog
+        var folderDialog = new OpenFolderDialog
         {
             Title = "Select Source Folder",
-            Filter = "Folders|*.*",
-            Multiselect = false,
-            CheckFileExists = false,
-            CheckPathExists = true
+            Multiselect = true
         };
 
         if (folderDialog.ShowDialog() != true)
         {
             return;
         }
+
+        var fileContents = await FileAggregator.GetContentsForFoldersAsync(folderDialog.FolderNames);
     }
 
     private void SelectSourceFile_Click(object sender, RoutedEventArgs e)
     {
-        var fileDialog = new Microsoft.Win32.OpenFileDialog
+        var fileDialog = new OpenFileDialog
         {
             Title = "Select Source Code File(s)",
             Filter = "Source Code Files (*.cs, *.vb)|*.cs;*.vb|All Files (*.*)|*.*",
@@ -108,6 +105,8 @@ public partial class MainWindow : Window
         {
             return;
         }
+
+        var configurationValues = ConfigurationValues.CreateFromFiles(fileDialog.FileNames);
     }
 
     #endregion
