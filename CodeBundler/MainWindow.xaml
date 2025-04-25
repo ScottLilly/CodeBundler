@@ -26,10 +26,10 @@
                               Click="SelectSourceSolution_Click"/>
                     <MenuItem Header="_Project"
                               Click="SelectSourceProject_Click"/>
-                    <MenuItem Header="_Folder"
+                    <MenuItem Header="_Folder(s)"
                               Click="SelectSourceFolder_Click"/>
-                    <MenuItem Header="_File"
-                              Click="SelectSourceFile_Click"/>
+                    <MenuItem Header="_File(s)"
+                              Click="SelectSourceFiles_Click"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="_Exit"
