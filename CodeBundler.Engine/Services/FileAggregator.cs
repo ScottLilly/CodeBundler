@@ -156,5 +156,38 @@ public class FileAggregator
         return outputDocuments;
     }
 
+    public static async Task<List<string>> GetContentsForFilesAsync(string[] filePaths)
+    {
+        if (filePaths.Length == 0)
+        {
+            throw new ArgumentException("Files paths cannot be null or empty.", nameof(filePaths));
+        }
+
+        if (filePaths.Any(fp => !File.Exists(fp)))
+        {
+            throw new DirectoryNotFoundException("One or more files do not exist: " + string.Join(", ", filePaths));
+        }
+
+        // Instantiate output collection
+        List<string> outputDocuments = [];
+
+        // Loop through each file path passed in
+        foreach (var filePath in filePaths)
+        {
+            // Check if the file matches any of the excluded patterns
+            if (s_excludedFilePatterns.Any(pattern => filePath.EndsWith(pattern, StringComparison.OrdinalIgnoreCase)))
+            {
+                continue; // Skip excluded files
+            }
+
+            // Read the content of the document
+            var documentText = await File.ReadAllTextAsync(filePath);
+
+            outputDocuments.Add(documentText);
+        }
+
+        return outputDocuments;
+    }
+
     #endregion
 }

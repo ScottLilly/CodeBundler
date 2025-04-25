@@ -92,7 +92,7 @@ public partial class MainWindow : Window
         var fileContents = await FileAggregator.GetContentsForFoldersAsync(folderDialog.FolderNames);
     }
 
-    private void SelectSourceFile_Click(object sender, RoutedEventArgs e)
+    private async void SelectSourceFiles_Click(object sender, RoutedEventArgs e)
     {
         var fileDialog = new OpenFileDialog
         {
@@ -106,7 +106,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var configurationValues = ConfigurationValues.CreateFromFiles(fileDialog.FileNames);
+        var fileContents = await FileAggregator.GetContentsForFilesAsync(fileDialog.FileNames);
     }
 
     #endregion
