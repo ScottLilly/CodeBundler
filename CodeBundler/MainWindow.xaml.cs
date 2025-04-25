@@ -1,5 +1,4 @@
-﻿using CodeBundler.Engine.Models;
-using CodeBundler.Engine.Services;
+﻿using CodeBundler.Engine.Services;
 using CodeBundler.Windows;
 using Microsoft.Win32;
 using System.Windows;
@@ -19,7 +18,6 @@ public partial class MainWindow : Window
     }
 
     #endregion
-
 
     #region Eventhandlers
 
@@ -56,7 +54,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var fileContents = await FileAggregator.GetContentsForSolutionAsync(fileDialog.FileName);
+        var filesToConsolidate = await FileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
+
+        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
     }
 
     private async void SelectSourceProject_Click(object sender, RoutedEventArgs e)
@@ -73,7 +73,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var fileContents = await FileAggregator.GetContentsForProjectAsync(fileDialog.FileName);
+        var filesToConsolidate = await FileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
+
+        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
     }
 
     private async void SelectSourceFolder_Click(object sender, RoutedEventArgs e)
@@ -89,7 +91,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var fileContents = await FileAggregator.GetContentsForFoldersAsync(folderDialog.FolderNames);
+        var filesToConsolidate = await FileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
+
+        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
     }
 
     private async void SelectSourceFiles_Click(object sender, RoutedEventArgs e)
@@ -106,7 +110,17 @@ public partial class MainWindow : Window
             return;
         }
 
-        var fileContents = await FileAggregator.GetContentsForFilesAsync(fileDialog.FileNames);
+        var filesToConsolidate = await FileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
+
+        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
+    }
+
+    private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(OutputTextBox.Text))
+        {
+            Clipboard.SetText(OutputTextBox.Text);
+        }
     }
 
     #endregion
