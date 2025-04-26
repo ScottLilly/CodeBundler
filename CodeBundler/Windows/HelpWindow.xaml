@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:CodeBundler.Windows"
         mc:Ignorable="d"
         Title="Help"
+        WindowStartupLocation="CenterOwner"
         Height="450" Width="800">
     
     <Grid>

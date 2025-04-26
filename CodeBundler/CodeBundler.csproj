@@ -6,10 +6,33 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\CodeBundler_Transparent.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\CodeBundler.ico" />
+    <None Remove="Images\CodeBundler_Transparent.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\CodeBundler_Transparent.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\CodeBundler.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\CodeBundler_Transparent.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CodeBundler.Engine\CodeBundler.Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ScottLilly.CSharpExtender" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
