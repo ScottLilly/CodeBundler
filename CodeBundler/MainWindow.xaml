@@ -7,18 +7,24 @@
         mc:Ignorable="d"
         Title="Code Bundler"
         FontSize="14"
-        Height="450" Width="800">
+        Height="768" Width="1024">
     
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Menu Bar -->
         <Menu Grid.Row="0" Grid.Column="0"
+              Grid.ColumnSpan="2"
               FontSize="14">
             <MenuItem Header="_File">
                 <MenuItem Header="Select Source">
@@ -44,7 +50,27 @@
             </MenuItem>
         </Menu>
 
+        <Label Grid.Row="2" Grid.Column="0"
+               Content="Current File:"/>
+        <Label Grid.Row="2" Grid.Column="1"
+               x:Name="CurrentFileNameLabel"/>
+
+        <!-- Page Body -->
+        <TextBox Grid.Row="4" Grid.Column="0"
+                 Grid.ColumnSpan="2"
+                 x:Name="OutputTextBox"
+                 IsReadOnly="True"
+                 VerticalScrollBarVisibility="Auto"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Margin="10">
+            <TextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy" Click="CopyMenuItem_Click" />
+                </ContextMenu>
+            </TextBox.ContextMenu>
+        </TextBox>
 
     </Grid>
-    
+
 </Window>
