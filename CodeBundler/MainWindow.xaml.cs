@@ -14,6 +14,8 @@ public partial class MainWindow : Window
 
     private readonly FileCollector _fileCollector = new();
     private readonly FileConsolidator _fileConsolidator = new();
+    
+    private HelpWindow? _helpWindow;
 
     #endregion
 
@@ -37,9 +39,18 @@ public partial class MainWindow : Window
 
     private void ViewHelp_Click(object sender, RoutedEventArgs e)
     {
-        var helpWindow = new HelpWindow();
-        helpWindow.Owner = this;
-        helpWindow.ShowDialog();
+        if (_helpWindow == null)
+        {
+            _helpWindow = new HelpWindow();
+            _helpWindow.Owner = this;
+            _helpWindow.Closed += (s, args) => _helpWindow = null; // Clear reference when closed
+            _helpWindow.Show();
+        }
+        else
+        {
+            _helpWindow.WindowState = WindowState.Normal;
+            _helpWindow.Activate();
+        }
     }
 
     private void About_Click(object sender, RoutedEventArgs e)

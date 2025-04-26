@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using CodeBundler.ViewModels;
+using System.Windows;
 
 namespace CodeBundler.Windows;
 
@@ -10,5 +11,12 @@ public partial class AboutWindow : Window
     public AboutWindow()
     {
         InitializeComponent();
+
+        DataContext = new AboutViewModel();
+    }
+
+    private void OK_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }
