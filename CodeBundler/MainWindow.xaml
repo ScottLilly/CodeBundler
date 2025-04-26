@@ -51,9 +51,10 @@
         </Menu>
 
         <Label Grid.Row="2" Grid.Column="0"
-               Content="Current File:"/>
+               FontWeight="Bold"
+               Content="Status:"/>
         <Label Grid.Row="2" Grid.Column="1"
-               x:Name="CurrentFileNameLabel"/>
+               x:Name="StatusMessageLabel"/>
 
         <!-- Page Body -->
         <TextBox Grid.Row="4" Grid.Column="0"

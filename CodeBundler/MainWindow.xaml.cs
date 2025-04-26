@@ -1,7 +1,6 @@
 ﻿using CodeBundler.Engine.Services;
 using CodeBundler.Windows;
 using Microsoft.Win32;
-using System.Configuration;
 using System.Windows;
 
 namespace CodeBundler;
@@ -24,7 +23,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        _fileConsolidator.FileProcessingStarted += FileProcessingStartedHandler;
+        _fileConsolidator.StatusUpdated += FileProcessingStartedHandler;
     }
 
     #endregion
@@ -64,9 +63,11 @@ public partial class MainWindow : Window
             return;
         }
 
+        UpdateStatusMessage("Finding code files in solution");
+
         var filesToConsolidate = await _fileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
 
-        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
+        await ConsolidateFiles(filesToConsolidate);
     }
 
     private async void SelectSourceProject_Click(object sender, RoutedEventArgs e)
@@ -83,16 +84,18 @@ public partial class MainWindow : Window
             return;
         }
 
+        UpdateStatusMessage("Finding code files in project");
+
         var filesToConsolidate = await _fileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
 
-        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
+        await ConsolidateFiles(filesToConsolidate);
     }
 
     private async void SelectSourceFolder_Click(object sender, RoutedEventArgs e)
     {
         var folderDialog = new OpenFolderDialog
         {
-            Title = "Select Source Folder",
+            Title = "Select Source Folder(s)",
             Multiselect = true
         };
 
@@ -101,9 +104,11 @@ public partial class MainWindow : Window
             return;
         }
 
+        UpdateStatusMessage("Finding code files in folder(s)");
+
         var filesToConsolidate = await _fileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
 
-        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
+        await ConsolidateFiles(filesToConsolidate);
     }
 
     private async void SelectSourceFiles_Click(object sender, RoutedEventArgs e)
@@ -120,9 +125,20 @@ public partial class MainWindow : Window
             return;
         }
 
+        UpdateStatusMessage("Finding code file(s)");
+
         var filesToConsolidate = await _fileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
 
-        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
+        await ConsolidateFiles(filesToConsolidate);
+    }
+
+    private async Task ConsolidateFiles(IReadOnlyList<string> files)
+    {
+        UpdateStatusMessage($"Started consolidating {files.Count} files");
+
+        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(files);
+
+        UpdateStatusMessage($"Finished consolidating {files.Count} files");
     }
 
     private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
@@ -133,11 +149,15 @@ public partial class MainWindow : Window
         }
     }
 
-    private void FileProcessingStartedHandler(object? sender, string fileName)
+    private void FileProcessingStartedHandler(object? sender, string statusMessage)
     {
-        Dispatcher.Invoke(() => CurrentFileNameLabel.Content = fileName);
+        UpdateStatusMessage(statusMessage);
+    }
+
+    private void UpdateStatusMessage(string message)
+    {
+        Dispatcher.Invoke(() => StatusMessageLabel.Content = message);
     }
 
     #endregion
-
 }
