@@ -6,7 +6,7 @@ public class FileConsolidator
 {
     private static readonly string SEPARATOR = new('=', 30);
 
-    public event EventHandler<string> FileProcessingStarted;
+    public event EventHandler<string> StatusUpdated = null!;
 
     public async Task<string> GetFilesAsStringAsync(IReadOnlyList<string> files)
     {
@@ -30,7 +30,7 @@ public class FileConsolidator
         var sb = new StringBuilder(Math.Min((int)estimatedSize, int.MaxValue));
         foreach (var file in files)
         {
-            OnFileProcessingStarted(file);
+            RaiseStatusMessage($"Reading: {file}");
 
             sb.AppendLine(Path.GetFileName(file));
             sb.AppendLine(SEPARATOR);
@@ -58,8 +58,8 @@ public class FileConsolidator
         await File.WriteAllTextAsync(outputFilePath, consolidatedContent);
     }
 
-    private void OnFileProcessingStarted(string fileName)
+    private void RaiseStatusMessage(string statusMessage)
     {
-        FileProcessingStarted?.Invoke(this, fileName);
+        StatusUpdated?.Invoke(this, statusMessage);
     }
 }
