@@ -1,6 +1,7 @@
 ﻿using CodeBundler.Engine.Services;
 using CodeBundler.Windows;
 using Microsoft.Win32;
+using System.Configuration;
 using System.Windows;
 
 namespace CodeBundler;
@@ -10,11 +11,20 @@ namespace CodeBundler;
 /// </summary>
 public partial class MainWindow : Window
 {
+    #region Fields
+
+    private readonly FileCollector _fileCollector = new();
+    private readonly FileConsolidator _fileConsolidator = new();
+
+    #endregion
+
     #region Constructor
 
     public MainWindow()
     {
         InitializeComponent();
+
+        _fileConsolidator.FileProcessingStarted += FileProcessingStartedHandler;
     }
 
     #endregion
@@ -54,9 +64,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var filesToConsolidate = await FileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
+        var filesToConsolidate = await _fileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
 
-        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
+        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
     }
 
     private async void SelectSourceProject_Click(object sender, RoutedEventArgs e)
@@ -73,9 +83,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var filesToConsolidate = await FileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
+        var filesToConsolidate = await _fileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
 
-        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
+        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
     }
 
     private async void SelectSourceFolder_Click(object sender, RoutedEventArgs e)
@@ -91,9 +101,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var filesToConsolidate = await FileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
+        var filesToConsolidate = await _fileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
 
-        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
+        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
     }
 
     private async void SelectSourceFiles_Click(object sender, RoutedEventArgs e)
@@ -110,9 +120,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var filesToConsolidate = await FileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
+        var filesToConsolidate = await _fileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
 
-        OutputTextBox.Text = await FileConsolidator.GetFilesAsString(filesToConsolidate);
+        OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(filesToConsolidate);
     }
 
     private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
@@ -121,6 +131,11 @@ public partial class MainWindow : Window
         {
             Clipboard.SetText(OutputTextBox.Text);
         }
+    }
+
+    private void FileProcessingStartedHandler(object? sender, string fileName)
+    {
+        Dispatcher.Invoke(() => CurrentFileNameLabel.Content = fileName);
     }
 
     #endregion

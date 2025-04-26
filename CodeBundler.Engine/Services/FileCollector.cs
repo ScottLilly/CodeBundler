@@ -26,7 +26,7 @@ public class FileCollector
     /// <param name="solutionFileName">Name of Visual Studio solution</param>
     /// <returns>ReadOnlyList of code files in a Visual Studio solution</returns>
     /// <exception cref="InvalidOperationException">Exception if .sln file cannot be loaded</exception>
-    public static async Task<IReadOnlyList<string>> GetFilesFromSolutionAsync(string solutionFileName)
+    public async Task<IReadOnlyList<string>> GetFilesFromSolutionAsync(string solutionFileName)
     {
         ValidateFilePath(solutionFileName, nameof(solutionFileName));
 
@@ -37,21 +37,21 @@ public class FileCollector
 
         var filePaths = new ConcurrentBag<string>();
 
-        Parallel.ForEach(solution.Projects, (project, _) =>
+        foreach (var project in solution.Projects)
         {
-            foreach (var doc in project.Documents)
+            foreach (var document in project.Documents)
             {
-                if (!IsExcludedFile(doc.Name))
+                if (!IsExcludedFile(document.Name))
                 {
-                    filePaths.Add(doc.FilePath ?? doc.Name);
+                    filePaths.Add(document.FilePath ?? document.Name);
                 }
             }
-        });
+        }
 
         return filePaths.ToList().AsReadOnly();
     }
 
-    public static async Task<IReadOnlyList<string>> GetFilesFromProjectAsync(string projectFileName)
+    public async Task<IReadOnlyList<string>> GetFilesFromProjectAsync(string projectFileName)
     {
         ValidateFilePath(projectFileName, nameof(projectFileName));
 
@@ -73,7 +73,7 @@ public class FileCollector
         return filePaths.AsReadOnly();
     }
 
-    public static async Task<IReadOnlyList<string>> GetFilesFromFoldersAsync(string[] folderPaths)
+    public async Task<IReadOnlyList<string>> GetFilesFromFoldersAsync(string[] folderPaths)
     {
         ValidateFolderPaths(folderPaths);
 
@@ -93,7 +93,7 @@ public class FileCollector
             filePaths.Where(f => !IsExcludedFile(f)).ToList().AsReadOnly());
     }
 
-    public static async Task<IReadOnlyList<string>> GetFilesFromFilesAsync(string[] filePaths)
+    public async Task<IReadOnlyList<string>> GetFilesFromFilesAsync(string[] filePaths)
     {
         ValidateFilePaths(filePaths);
 
