@@ -67,7 +67,8 @@
                  Margin="10">
             <TextBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Copy" Click="CopyMenuItem_Click" />
+                    <MenuItem Header="Copy to clipboard" Click="CopyToClipboard_Click" />
+                    <MenuItem Header="Save to file" Click="SaveToFile_Click"/>
                 </ContextMenu>
             </TextBox.ContextMenu>
         </TextBox>
