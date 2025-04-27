@@ -16,8 +16,9 @@ At least one of the following parameters is required:
 -f <Files>
 
 Notes:
-Source parameters are listed in order of precedence, so if you specify both a solution and a project, the solution will be used.
-If you want to use multiple directories or files, separate them with a semi-colon character ";".
+Source parameters are listed in order of precedence.
+If you specify both a solution and a project, the solution will be used.
+To use multiple directories or files, separate them with a semi-colon ";".
 
 Examples:
 CodeBundler.Console -s D:\CodeBundler\CodeBundler.sln -o D:\TestOutput\CodeBundler\combined.txt
@@ -26,6 +27,7 @@ CodeBundler.Console -d D:\CodeBundler\CodeBundler.Engine;D:\CodeBundler\CodeBund
 ```
 ### WPF Application
 Run CodeBundler.exe
+
 This will open a WPF application where you can select the source solution, project, directories, or files.
 The consolidated code will be displayed in a text box, and you can right-click to copy it to the clipboard, for pasting into an LLM.
 
