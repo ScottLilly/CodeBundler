@@ -1,7 +1,11 @@
 ![Build Status](https://github.com/ScottLilly/CodeBundler/actions/workflows/ci.yml/badge.svg)
 
 # CodeBundler
+<img align="left" width="100" height="100" style="color:white" src="https://github.com/ScottLilly/CodeBundler/blob/master/CodeBundler/Images/CodeBundler_Transparent.png">
 WPF and command line tool to bundle C# or VB.NET code files into a single file or string.
+<br/>
+<br/>
+This was created to combine source code files into a single text file, or string to be copied into a clipboard, and pasted into an LLM, to ask questions about the source code and find problems or areas for improvement.
 
 ## How to use
 ### Command Line Interface (CLI)
