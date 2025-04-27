@@ -4,7 +4,7 @@ namespace CodeBundler.Engine.Services;
 
 public class FileConsolidator
 {
-    private static readonly string SEPARATOR = new('=', 30);
+    private static readonly string _separator = new('=', 30);
 
     public event EventHandler<string> StatusUpdated = null!;
 
@@ -22,7 +22,7 @@ public class FileConsolidator
             var fileInfo = new FileInfo(file);
             estimatedSize += fileInfo.Length;
             estimatedSize += Path.GetFileName(file).Length + Environment.NewLine.Length;
-            estimatedSize += SEPARATOR.Length + Environment.NewLine.Length;
+            estimatedSize += _separator.Length + Environment.NewLine.Length;
             estimatedSize += Environment.NewLine.Length;
         }
 
@@ -33,7 +33,7 @@ public class FileConsolidator
             RaiseStatusMessage($"Reading: {file}");
 
             sb.AppendLine(Path.GetFileName(file));
-            sb.AppendLine(SEPARATOR);
+            sb.AppendLine(_separator);
             sb.Append(await File.ReadAllTextAsync(file));
             sb.AppendLine("");
         }
@@ -53,9 +53,40 @@ public class FileConsolidator
             throw new ArgumentException("Output file path cannot be null or empty.", nameof(outputFilePath));
         }
 
-        var consolidatedContent = await GetFilesAsStringAsync(files);
+        // Create the output directories if they do not exist
+        string? directoryPath = Path.GetDirectoryName(outputFilePath);
 
-        await File.WriteAllTextAsync(outputFilePath, consolidatedContent);
+        if (!string.IsNullOrEmpty(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
+        // Use streams to read source files and write consolidated file
+        using var outputStream = new FileStream(outputFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
+        using var outputWriter = new StreamWriter(outputStream);
+        foreach (var file in files)
+        {
+            RaiseStatusMessage($"Consolidating: {file}");
+
+            // Write filename and separator
+            await outputWriter.WriteLineAsync(Path.GetFileName(file));
+            await outputWriter.WriteLineAsync(_separator);
+
+            // Read the file content in chunks to avoid memory issues with large files
+            using (var inputStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var inputReader = new StreamReader(inputStream))
+            {
+                char[] buffer = new char[8192]; // 8KB buffer
+                int charsRead;
+                while ((charsRead = await inputReader.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                {
+                    await outputWriter.WriteAsync(buffer, 0, charsRead);
+                }
+            }
+
+            // Write a line feed after each file's content
+            await outputWriter.WriteLineAsync();
+        }
     }
 
     private void RaiseStatusMessage(string statusMessage)

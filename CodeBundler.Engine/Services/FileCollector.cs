@@ -12,7 +12,8 @@ public class FileCollector
     private static readonly IReadOnlyList<string> s_fileExtensionsToInclude = [".cs", ".vb"];
     private static readonly IReadOnlyList<Regex> s_excludedFilePatterns =
         [
-            new Regex(@"(AssemblyAttributes|AssemblyInfo|\.g|\.g\.i|\.Designer|\.generated)\.(cs|vb)$", RegexOptions.IgnoreCase | RegexOptions.Compiled)
+            new Regex(@"(AssemblyAttributes|AssemblyInfo|\.g|\.g\.i|\.Designer|\.generated)\.(cs|vb)$", 
+                RegexOptions.IgnoreCase | RegexOptions.Compiled)
         ];
 
     #endregion
@@ -51,6 +52,13 @@ public class FileCollector
         return filePaths.ToList().AsReadOnly();
     }
 
+    /// <summary>
+    /// Retrieves all code files (*.cs|*.vb) from a project,
+    /// excluding files that match specific patterns (generally the automatically created files).
+    /// </summary>
+    /// <param name="projectFileName">Name of the Visual Studio project</param>
+    /// <returns>ReadOnlyList of code files in a Visual Studio project</returns>
+    /// <exception cref="InvalidOperationException">Exception if .csproj|.vbproj file cannot be loaded</exception>
     public async Task<IReadOnlyList<string>> GetFilesFromProjectAsync(string projectFileName)
     {
         ValidateFilePath(projectFileName, nameof(projectFileName));
@@ -73,6 +81,12 @@ public class FileCollector
         return filePaths.AsReadOnly();
     }
 
+    /// <summary>
+    /// Retrieves all code files (*.cs|*.vb) from specified folders,
+    /// excluding files that match specific patterns (generally the automatically created files).
+    /// </summary>
+    /// <param name="folderPaths">List of folder paths</param>
+    /// <returns>ReadOnlyList of code files</returns>
     public async Task<IReadOnlyList<string>> GetFilesFromFoldersAsync(string[] folderPaths)
     {
         ValidateFolderPaths(folderPaths);
@@ -97,8 +111,7 @@ public class FileCollector
     {
         ValidateFilePaths(filePaths);
 
-        return await Task.FromResult<IReadOnlyList<string>>(
-            filePaths.Where(f => !IsExcludedFile(f)).ToList().AsReadOnly());
+        return await Task.FromResult<IReadOnlyList<string>>(filePaths.AsReadOnly());
     }
 
     #endregion
@@ -145,15 +158,6 @@ public class FileCollector
         if (invalidPaths.Any())
         {
             throw new FileNotFoundException("One or more files do not exist: " + string.Join(", ", invalidPaths));
-        }
-
-        var invalidExtensions = filePaths
-            .Where(fp => !s_fileExtensionsToInclude.Any(ext => fp.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
-            .ToArray();
-
-        if (invalidExtensions.Any())
-        {
-            throw new ArgumentException("One or more files have unsupported extensions: " + string.Join(", ", invalidExtensions));
         }
     }
 

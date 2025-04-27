@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodeBundler.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "-d D:\\Development\\OpenSource\\General\\CodeBundler\\CodeBundler.Engine;D:\\Development\\OpenSource\\General\\CodeBundler\\CodeBundler.Console -o D:\\TestOutput\\CodeBundler\\combined.txt"
+    }
+  }
+}
