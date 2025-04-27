@@ -21,9 +21,9 @@ If you specify both a solution and a project, the solution will be used.
 To use multiple directories or files, separate them with a semi-colon ";".
 
 Examples:
-CodeBundler.Console -s D:\CodeBundler\CodeBundler.sln -o D:\TestOutput\CodeBundler\combined.txt
+CodeBundler.Console -s D:\CodeBundler\CodeBundler.sln -o D:\Output\combined.txt
 
-CodeBundler.Console -d D:\CodeBundler\CodeBundler.Engine;D:\CodeBundler\CodeBundler.Console -o D:\TestOutput\CodeBundler\combined.txt
+CodeBundler.Console -d D:\CodeBundler\CodeBundler.Engine;D:\CodeBundler\CodeBundler.Console -o D:\Output\combined.txt
 ```
 ### WPF Application
 Run CodeBundler.exe
