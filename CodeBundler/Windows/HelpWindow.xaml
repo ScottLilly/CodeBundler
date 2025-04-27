@@ -5,12 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CodeBundler.Windows"
         mc:Ignorable="d"
-        Title="Help"
+        Style="{StaticResource WindowStyle}"
+        Title="Code Bundler Help"
+        FontSize="16"
         WindowStartupLocation="CenterOwner"
-        Height="450" Width="800">
-    
-    <Grid>
-        
+        Height="500" Width="700">
+
+    <Grid Margin="5,5,5,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0">
+            <TextBlock x:Name="HelpText"
+                       TextWrapping="Wrap" />
+        </Label>
+
+        <Button Grid.Row="2" Grid.Column="1"
+                HorizontalAlignment="Right"
+                Style="{StaticResource ButtonStyle}"
+                Content="OK"
+                Click="OK_Click"/>
+
     </Grid>
     
 </Window>
