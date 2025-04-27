@@ -1,6 +1,7 @@
 ﻿using CodeBundler.Engine.Services;
 using CodeBundler.Windows;
 using Microsoft.Win32;
+using System.IO;
 using System.Windows;
 
 namespace CodeBundler;
@@ -30,7 +31,7 @@ public partial class MainWindow : Window
 
     #endregion
 
-    #region Eventhandlers
+    #region Main Menu Eventhandlers
 
     private void Exit_Click(object sender, RoutedEventArgs e)
     {
@@ -179,6 +180,48 @@ public partial class MainWindow : Window
         }
     }
 
+    #endregion
+
+    #region Context menu option handlers
+
+    private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(OutputTextBox.Text))
+        {
+            Clipboard.SetText(OutputTextBox.Text);
+        }
+    }
+
+    private void SaveToFile_Click(object sender, RoutedEventArgs e)
+    {
+        var saveDialog = new SaveFileDialog
+        {
+            Title = "Save Consolidated Code",
+            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+            FileName = "ConsolidatedCode.txt"
+        };
+
+        if (saveDialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        try
+        {
+            File.WriteAllText(saveDialog.FileName, OutputTextBox.Text);
+
+            MessageBox.Show("File saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error saving file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    #endregion
+
+    #region General methods
+
     private async Task ConsolidateFiles(IReadOnlyList<string> files)
     {
         UpdateStatusMessage($"Started consolidating {files.Count} files");
@@ -186,14 +229,6 @@ public partial class MainWindow : Window
         OutputTextBox.Text = await _fileConsolidator.GetFilesAsStringAsync(files);
 
         UpdateStatusMessage($"Finished consolidating {files.Count} files");
-    }
-
-    private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        if (!string.IsNullOrEmpty(OutputTextBox.Text))
-        {
-            Clipboard.SetText(OutputTextBox.Text);
-        }
     }
 
     private void FileProcessingStartedHandler(object? sender, string statusMessage)
