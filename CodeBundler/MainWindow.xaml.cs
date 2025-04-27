@@ -76,9 +76,18 @@ public partial class MainWindow : Window
 
         UpdateStatusMessage("Finding code files in solution");
 
-        var filesToConsolidate = await _fileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
+        try
+        {
+            var filesToConsolidate =
+                await _fileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
 
-        await ConsolidateFiles(filesToConsolidate);
+            await ConsolidateFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error processing solution: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
     private async void SelectSourceProject_Click(object sender, RoutedEventArgs e)
@@ -97,9 +106,18 @@ public partial class MainWindow : Window
 
         UpdateStatusMessage("Finding code files in project");
 
-        var filesToConsolidate = await _fileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
+        try
+        {
+            var filesToConsolidate =
+                await _fileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
 
-        await ConsolidateFiles(filesToConsolidate);
+            await ConsolidateFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error processing project: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
     private async void SelectSourceFolder_Click(object sender, RoutedEventArgs e)
@@ -117,9 +135,18 @@ public partial class MainWindow : Window
 
         UpdateStatusMessage("Finding code files in folder(s)");
 
-        var filesToConsolidate = await _fileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
+        try
+        {
+            var filesToConsolidate =
+                await _fileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
 
-        await ConsolidateFiles(filesToConsolidate);
+            await ConsolidateFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error processing folder(s): {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
     private async void SelectSourceFiles_Click(object sender, RoutedEventArgs e)
@@ -138,9 +165,18 @@ public partial class MainWindow : Window
 
         UpdateStatusMessage("Finding code file(s)");
 
-        var filesToConsolidate = await _fileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
+        try
+        {
+            var filesToConsolidate = 
+                await _fileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
 
-        await ConsolidateFiles(filesToConsolidate);
+            await ConsolidateFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error processing file(s): {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
     private async Task ConsolidateFiles(IReadOnlyList<string> files)
