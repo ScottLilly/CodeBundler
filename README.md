@@ -1,11 +1,11 @@
-![Build Status](https://github.com/ScottLilly/CodeBundler/actions/workflows/ci.yml/badge.svg)
-
 # CodeBundler
 <img align="left" width="100" height="100" style="color:white" src="https://github.com/ScottLilly/CodeBundler/blob/master/CodeBundler/Images/CodeBundler_Transparent.png">
-WPF and command line tool to bundle C# or VB.NET code files into a single file or string.
-<br/>
-<br/>
-This was created to combine source code files into a single text file, or string to be copied into a clipboard, and pasted into an LLM, to ask questions about the source code and find problems or areas for improvement.
+WPF and command line tool to bundle C# or VB.NET code files into a single file or string.<br/><br/>
+This was created to combine source code files into a single text file, or string to be copied into a clipboard, and pasted into an LLM, to ask questions about the source code and find problems or areas for improvement.<br/><br/>
+If you select a Visual Studio C# or VB.NET solution or project file as the source, CodeBundler will read all non-generated .cs or .vb files within the solution or project.<br/><br/>
+
+![Build Status](https://github.com/ScottLilly/CodeBundler/actions/workflows/ci.yml/badge.svg)
+[![License](https://img.shields.io/github/license/ScottLilly/CodeBundler)](https://github.com/ScottLilly/CodeBundler/LICENSE)
 
 ## How to use
 ### Command Line Interface (CLI)
