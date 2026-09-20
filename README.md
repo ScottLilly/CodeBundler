@@ -5,7 +5,7 @@ This was created to combine source code files into a single text file, or string
 If you select a Visual Studio C# or VB.NET solution or project file as the source, CodeBundler will read all non-generated .cs or .vb files within the solution or project.
 
 ## Project Overview
-![Build Status](https://github.com/ScottLilly/CodeBundler/actions/workflows/ci.yml/badge.svg)
+![Build Status](https://github.com/ScottLilly/CodeBundler/actions/workflows/build-and-test.yml/badge.svg)
 [![License](https://img.shields.io/github/license/ScottLilly/CodeBundler)](https://github.com/ScottLilly/CodeBundler/LICENSE)
 
 ## How to use
